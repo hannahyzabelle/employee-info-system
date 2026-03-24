@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trainings</title>
+
+    <!-- Bootstrap (optional) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='./style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>HR Portal</h3>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="sidebar-link">Dashboard</a>
+            <a href="/employees" class="sidebar-link">Employees</a>
+            <a href="/trainings" class="sidebar-link active">Trainings</a>
+            <a href="/service-record" class="sidebar-link">Service Record</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- HEADER -->
+        <div class="top-header">
+            <h2>Employee Info System</h2>
+            <a href="/" class="logout-btn">Logout</a>
+        </div>
+
+        <h1>Trainings</h1>
+
+        <!-- ADD TRAINING -->
+        <div class="employee-form">
+            <h3>Add Training</h3>
+
+            <form method="POST" action="/add_training">
+                <label>Employee ID</label>
+                <input name="employee_id" required>
+
+                <label>Title</label>
+                <input name="title" required>
+
+                <label>Date</label>
+                <input type="date" name="date">
+
+                <button class="btn-custom btn-custom-primary">Add Training</button>
+            </form>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-box">
+            <h3>Training List</h3>
+
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Employee</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for t in trainings %}
+                    <tr>
+                        <td>{{ t['id'] }}</td>
+                        <td>{{ t['employee_id'] }}</td>
+                        <td>{{ t['title'] }}</td>
+                        <td>{{ t['date'] }}</td>
+                        <td>
+                            <!-- EDIT (simple version) -->
+                            <a href="/trainings?edit={{ t['id'] }}" class="btn-custom btn-custom-primary">Edit</a>
+
+                            <!-- DELETE -->
+                            <a href="/delete_training/{{ t['id'] }}" class="btn-custom btn-custom-secondary">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
