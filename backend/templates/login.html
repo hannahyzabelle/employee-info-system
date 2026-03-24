@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee System Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+</head>
+<body class="bg-light d-flex justify-content-center align-items-center vh-100">
+
+    <div class="card p-4 shadow" style="width: 350px;">
+        <h3 class="text-center mb-3">Employee System Login</h3>
+
+        <!-- Login Form -->
+        <form method="POST" action="/">
+            <input type="text" name="username" class="form-control mb-2" placeholder="Username" required>
+            <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
+            <button class="btn btn-success w-100">Login</button>
+        </form>
+
+        <!-- Optional hint -->
+        <small class="text-muted">Use Username: <b>admin</b> | Password: <b>1234</b></small>
+    </div>
+
+</body>
+</html>

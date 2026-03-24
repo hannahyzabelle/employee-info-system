@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Info</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='./style.css') }}">
+</head>
+<body>
+<div class="dashboard-wrapper">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>HR Portal</h3>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="sidebar-link">Dashboard</a>
+            <a href="/employees" class="sidebar-link active">Employees</a>
+            <a href="/trainings" class="sidebar-link">Trainings</a>
+            <a href="/service-record" class="sidebar-link">Service Record</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header><h1>Employee Info</h1></header>
+        <div class="employee-form mt-4">
+            <form method="POST" action="/update_employee/{{ emp['id'] }}">
+                <label>First Name</label>
+                <input name="first_name" value="{{ emp['first_name'] }}" class="form-control mb-2">
+                <label>Last Name</label>
+                <input name="last_name" value="{{ emp['last_name'] }}" class="form-control mb-2">
+                <label>Birthday</label>
+                <input type="date" name="birthday" value="{{ emp['birthday'] }}" class="form-control mb-2">
+                <label>Status</label>
+                <input name="status" value="{{ emp['status'] }}" class="form-control mb-3">
+                <button class="btn btn-success">Update</button>
+                <a href="/dashboard" class="btn btn-secondary">Dashboard</a>
+            </form>
+        </div>
+    </main>
+</div>
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>

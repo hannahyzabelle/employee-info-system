@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='./style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>HR Portal</h3>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="sidebar-link active">Dashboard</a>
+            <a href="/employees" class="sidebar-link">Employees</a>
+            <a href="/trainings" class="sidebar-link">Trainings</a>
+            <a href="/service-record" class="sidebar-link">Service Record</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- TOP HEADER -->
+        <div class="top-header">
+            <h2>Employee Info System</h2>
+            <a href="/" class="logout-btn">Logout</a>
+        </div>
+
+        <!-- CARDS -->
+        <div class="cards-container">
+            <div class="dashboard-card">
+                <h3>{{ total }}</h3>
+                <p>Active Employees</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>50</h3>
+                <p>Permanent</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>50</h3>
+                <p>Temporary</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>55</h3>
+                <p>Separated</p>
+            </div>
+        </div>
+
+        <!-- RECENT ACTIVITIES -->
+        <div class="table-box">
+            <h3>Recent Activities</h3>
+
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Activity</th>
+                        <th>Employee</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Added Employee</td>
+                        <td>Juan Dela Cruz</td>
+                        <td>2026-03-23</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
