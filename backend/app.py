@@ -1,7 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for
+import os
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
 
-app = Flask(__name__)
+# Point Flask to the frontend directories
+app = Flask(__name__, 
+            template_folder=os.path.join(os.path.dirname(__file__), '..', 'frontend', 'templates'),
+            static_folder=os.path.join(os.path.dirname(__file__), '..', 'frontend', 'static'))
+app.secret_key = 'super-secret-key-for-session'
 
 # ================= DATABASE =================
 def get_db():
@@ -11,41 +16,8 @@ def get_db():
 
 def init_db():
     conn = get_db()
-    cursor = conn.cursor()
-
-    # Employees Table
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS employees (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        first_name TEXT,
-        last_name TEXT,
-        birthday TEXT,
-        status TEXT
-    )
-    ''')
-
-    # Trainings Table
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS trainings (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        employee_id INTEGER,
-        title TEXT,
-        date TEXT
-    )
-    ''')
-
-    # Service Record Table
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS service_record (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        employee_id INTEGER,
-        position TEXT,
-        start_date TEXT,
-        end_date TEXT,
-        agency TEXT
-    )
-    ''')
-
+    with open(os.path.join(os.path.dirname(__file__), 'db.sql'), 'r') as f:
+        conn.executescript(f.read())
     conn.commit()
     conn.close()
 
@@ -58,17 +30,31 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        if username == 'admin' and password == '1234':
+        conn = get_db()
+        user = conn.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password)).fetchone()
+        conn.close()
+
+        if user:
+            session['user_id'] = user['id']
+            session['username'] = user['username']
             return redirect('/dashboard')
         else:
-            return "Invalid Credentials"
+            flash("Invalid credentials, please try again.")
+            return redirect('/')
 
     return render_template('login.html')
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
 
 # ================= DASHBOARD =================
 @app.route('/dashboard')
 def dashboard():
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
 
     total = conn.execute("SELECT COUNT(*) FROM employees").fetchone()[0]
@@ -92,6 +78,9 @@ def dashboard():
 # ================= EMPLOYEES =================
 @app.route('/employees')
 def employees():
+    if 'user_id' not in session:
+        return redirect('/')
+
     search = request.args.get('search','')
 
     conn = get_db()
@@ -112,6 +101,9 @@ def employees():
 # ================= ADD EMPLOYEE =================
 @app.route('/add_employee', methods=['POST'])
 def add_employee():
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
 
     conn.execute("""
@@ -133,6 +125,9 @@ def add_employee():
 # ================= VIEW / EDIT EMPLOYEE =================
 @app.route('/employee/<int:id>')
 def view_employee(id):
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
 
     emp = conn.execute("SELECT * FROM employees WHERE id=?", (id,)).fetchone()
@@ -148,6 +143,9 @@ def view_employee(id):
 # ================= UPDATE EMPLOYEE =================
 @app.route('/update_employee/<int:id>', methods=['POST'])
 def update_employee(id):
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
 
     conn.execute("""
@@ -171,6 +169,9 @@ def update_employee(id):
 # ================= DELETE EMPLOYEE =================
 @app.route('/delete_employee/<int:id>')
 def delete_employee(id):
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
 
     conn.execute("DELETE FROM employees WHERE id=?", (id,))
@@ -184,6 +185,9 @@ def delete_employee(id):
 # ================= EMPLOYEE INFO SHORTCUT =================
 @app.route('/employee-info')
 def employee_info_redirect():
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
     emp = conn.execute("SELECT id FROM employees ORDER BY id LIMIT 1").fetchone()
     conn.close()
@@ -197,6 +201,9 @@ def employee_info_redirect():
 # ================= TRAININGS =================
 @app.route('/trainings')
 def trainings():
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
     data = conn.execute("SELECT * FROM trainings").fetchall()
     conn.close()
@@ -204,6 +211,9 @@ def trainings():
 
 @app.route('/add_training', methods=['POST'])
 def add_training():
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
 
     conn.execute("""
@@ -222,6 +232,9 @@ def add_training():
 
 @app.route('/delete_training/<int:id>')
 def delete_training(id):
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
 
     conn.execute("DELETE FROM trainings WHERE id=?", (id,))
@@ -235,6 +248,9 @@ def delete_training(id):
 # ================= SERVICE RECORD =================
 @app.route('/service-record')
 def service():
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
     data = conn.execute("SELECT * FROM service_record").fetchall()
     conn.close()
@@ -242,6 +258,9 @@ def service():
 
 @app.route('/add_service', methods=['POST'])
 def add_service():
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
 
     conn.execute("""
@@ -262,6 +281,9 @@ def add_service():
 
 @app.route('/delete_service/<int:id>')
 def delete_service(id):
+    if 'user_id' not in session:
+        return redirect('/')
+
     conn = get_db()
 
     conn.execute("DELETE FROM service_record WHERE id=?", (id,))
@@ -274,4 +296,4 @@ def delete_service(id):
 
 # ================= RUN =================
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True)
