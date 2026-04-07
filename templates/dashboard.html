@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block title %}Dashboard - Employee Info System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="page-title">Dashboard Overview</h2>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="dashboard-card glass-panel text-center p-4">
+            <div class="card-icon text-primary mb-3">
+                <i class="fa-solid fa-users fa-2x"></i>
+            </div>
+            <h5 class="text-muted">Total Employees</h5>
+            <h2 class="mb-0 fw-bold">{{ total }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-card glass-panel text-center p-4">
+            <div class="card-icon text-success mb-3">
+                <i class="fa-solid fa-user-check fa-2x"></i>
+            </div>
+            <h5 class="text-muted">Permanent</h5>
+            <h2 class="mb-0 fw-bold">{{ permanent }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-card glass-panel text-center p-4">
+            <div class="card-icon text-warning mb-3">
+                <i class="fa-solid fa-user-clock fa-2x"></i>
+            </div>
+            <h5 class="text-muted">Temporary</h5>
+            <h2 class="mb-0 fw-bold">{{ temporary }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-card glass-panel text-center p-4">
+            <div class="card-icon text-danger mb-3">
+                <i class="fa-solid fa-user-xmark fa-2x"></i>
+            </div>
+            <h5 class="text-muted">Separated</h5>
+            <h2 class="mb-0 fw-bold">{{ separated }}</h2>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="glass-panel p-4">
+            <h4 class="mb-4">Quick Actions</h4>
+            <div class="d-flex gap-3">
+                <a href="/employees" class="btn btn-outline-primary"><i class="fa-solid fa-user-plus me-2"></i> Manage Employees</a>
+                <a href="/service-record" class="btn btn-outline-info"><i class="fa-solid fa-file-contract me-2"></i> Service Records</a>
+                <a href="/trainings" class="btn btn-outline-warning"><i class="fa-solid fa-graduation-cap me-2"></i> Training Programs</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
