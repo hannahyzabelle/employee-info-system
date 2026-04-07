@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block title %}Employee Info - Employee Info System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="page-title">Employee Profile</h2>
+    <a href="/employees" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-arrow-left me-1"></i> Back to List
+    </a>
+</div>
+
+<div class="row align-items-start">
+    <div class="col-md-4 mb-4">
+        <div class="glass-panel text-center p-5">
+            <div class="avatar-placeholder mb-4 mx-auto">
+                {{ emp.first_name[0] }}{{ emp.last_name[0] }}
+            </div>
+            <h3 class="fw-bold text-white mb-1">{{ emp.first_name }} {{ emp.last_name }}</h3>
+            <span class="badge {% if emp.status == 'Permanent' %}bg-success{% elif emp.status == 'Temporary' %}bg-warning text-dark{% else %}bg-danger{% endif %} status-badge mb-3">
+                {{ emp.status }}
+            </span>
+            <p class="text-muted"><i class="fa-solid fa-cake-candles me-2"></i> {{ emp.birthday }}</p>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="glass-panel p-4 h-100">
+            <h4 class="mb-4 text-primary"><i class="fa-solid fa-circle-info me-2"></i> Details Overview</h4>
+            <div class="row section-details">
+                <div class="col-md-6 mb-3">
+                    <label class="text-muted small fw-bold text-uppercase">First Name</label>
+                    <div class="fs-5 text-white">{{ emp.first_name }}</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="text-muted small fw-bold text-uppercase">Last Name</label>
+                    <div class="fs-5 text-white">{{ emp.last_name }}</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="text-muted small fw-bold text-uppercase">Employee ID</label>
+                    <div class="fs-5 text-white">#{{ emp.id }}</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="text-muted small fw-bold text-uppercase">Status</label>
+                    <div class="fs-5 text-white">{{ emp.status }}</div>
+                </div>
+            </div>
+            
+            <hr class="border-secondary my-4">
+            
+            <div class="d-flex justify-content-between align-items-center">
+                <h5><i class="fa-solid fa-link text-muted me-2"></i> Quick Links</h5>
+                <div>
+                    <a href="/service-record" class="btn btn-sm btn-outline-info me-2">View Service Records</a>
+                    <a href="/trainings" class="btn btn-sm btn-outline-warning">View Trainings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
