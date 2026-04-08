@@ -1,0 +1,145 @@
+{% extends "layout.html" %}
+{% block title %}My Profile - EIS{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="glass-panel p-4 text-center">
+            <div class="avatar-placeholder mx-auto mb-4" style="width: 120px; height: 120px; font-size: 3rem;">
+                {% if emp.photo_path %}
+                <img src="{{ url_for('static', filename='uploads/' ~ emp.photo_path) }}" class="rounded-circle w-100 h-100" style="object-fit: cover; border: 4px solid var(--primary);">
+                {% else %}
+                {{ emp.full_name[0] }}
+                {% endif %}
+            </div>
+            <h3 class="page-title m-0">{{ emp.full_name }}</h3>
+            <p class="text-muted fw-bold mb-3">{{ emp.position }}</p>
+            <div class="badge bg-primary rounded-pill mb-4">{{ emp.status }}</div>
+            
+            <div class="text-start mt-4 pt-4 border-top border-secondary">
+                <div class="mb-3">
+                    <label class="text-muted small fw-bold text-uppercase d-block mb-1">Employee ID</label>
+                    <div class="fw-bold fs-5 text-accent-1">{{ emp.emp_id }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small fw-bold text-uppercase d-block mb-1">Department</label>
+                    <div class="fw-bold">{{ emp.department }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small fw-bold text-uppercase d-block mb-1">Date Hired</label>
+                    <div class="fw-bold">{{ emp.date_hired }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <div class="glass-panel p-4 mb-4">
+            <h5 class="text-accent-1 mb-4 border-bottom border-secondary pb-3"><i class="fa-solid fa-address-card me-2"></i> Personal Details</h5>
+            <form action="/staff/profile/update" method="POST">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small fw-bold">Contact Number</label>
+                        <input type="text" class="form-control" name="contact_number" value="{{ emp.contact_number }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small fw-bold">Email Address</label>
+                        <input type="email" class="form-control" name="email" value="{{ emp.email }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label text-muted small fw-bold">Street Address</label>
+                        <textarea class="form-control" name="address" rows="2">{{ emp.address }}</textarea>
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-2"></i> Update Contact Info</button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="row g-4 mt-2">
+                <div class="col-md-4">
+                    <label class="text-muted small fw-bold text-uppercase d-block">Gender</label>
+                    <div>{{ emp.gender }}</div>
+                </div>
+                <div class="col-md-4">
+                    <label class="text-muted small fw-bold text-uppercase d-block">Age</label>
+                    <div>{{ emp.age }}</div>
+                </div>
+                <div class="col-md-4">
+                    <label class="text-muted small fw-bold text-uppercase d-block">Birthday</label>
+                    <div>{{ emp.birthday }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service History -->
+        <div class="glass-panel p-0 overflow-hidden mb-4">
+            <div class="p-4 border-bottom border-secondary d-flex justify-content-between align-items-center">
+                <h5 class="text-accent-1 m-0"><i class="fa-solid fa-file-contract me-2"></i> Service Record History</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table custom-table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Agency</th>
+                            <th>Dates</th>
+                            <th>Increase</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in services %}
+                        <tr>
+                            <td class="fw-bold">{{ s.position }}</td>
+                            <td>{{ s.agency }}</td>
+                            <td class="small">{{ s.start_date }} to {{ s.end_date or 'Present' }}</td>
+                            <td class="text-success">+P{{ s.salary_increase }}</td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" class="text-center py-4 text-muted small">No records.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Trainings -->
+        <div class="glass-panel p-0 overflow-hidden">
+            <div class="p-4 border-bottom border-secondary d-flex justify-content-between align-items-center">
+                <h5 class="text-accent-1 m-0"><i class="fa-solid fa-graduation-cap me-2"></i> Trainings & Seminars</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table custom-table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Hours</th>
+                            <th>Certificate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in trainings %}
+                        <tr>
+                            <td class="fw-bold">{{ t.title }}</td>
+                            <td class="small">{{ t.date_attended }}</td>
+                            <td>{{ t.hours }}</td>
+                            <td>
+                                {% if t.certificate_path %}
+                                <a href="{{ url_for('static', filename='uploads/' ~ t.certificate_path) }}" class="btn btn-sm btn-outline-info" target="_blank">
+                                    <i class="fa-solid fa-download me-1"></i> PDF
+                                </a>
+                                {% else %}
+                                <span class="text-muted small">N/A</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" class="text-center py-4 text-muted small">No records.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
