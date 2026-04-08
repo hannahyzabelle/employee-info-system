@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block title %}Leave Requests - EIS{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="glass-panel p-4">
+            <h5 class="text-accent-1 mb-4"><i class="fa-solid fa-paper-plane me-2"></i> Apply for Leave</h5>
+            <form action="/staff/leaves" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold">Leave Type</label>
+                    <select class="form-select" name="leave_type" required>
+                        <option value="Sick Leave">Sick Leave</option>
+                        <option value="Vacation Leave">Vacation Leave</option>
+                        <option value="Emergency Leave">Emergency Leave</option>
+                        <option value="Maternity Leave">Maternity Leave</option>
+                        <option value="Personal Leave">Personal Leave</option>
+                    </select>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label text-muted small fw-bold">Start Date</label>
+                        <input type="date" class="form-control" name="start_date" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-muted small fw-bold">End Date</label>
+                        <input type="date" class="form-control" name="end_date" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold">Reason</label>
+                    <textarea class="form-control" name="reason" rows="3" placeholder="Explain why..." required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold">Attachment (Optional)</label>
+                    <input type="file" class="form-control" name="attachment">
+                    <small class="text-muted">Medical certificate or proof.</small>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-uppercase">Submit Request</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <div class="glass-panel p-0 overflow-hidden">
+            <div class="p-4 border-bottom border-secondary d-flex justify-content-between align-items-center">
+                <h5 class="text-accent-1 m-0"><i class="fa-solid fa-history me-2"></i> Leave History</h5>
+                <span class="badge bg-primary rounded-pill">Showing All</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table custom-table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                            <th>Remarks</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for l in leaves %}
+                        <tr>
+                            <td>
+                                <div class="fw-bold">{{ l.leave_type }}</div>
+                                <div class="small text-muted text-wrap" style="max-width: 15rem;">{{ l.reason }}</div>
+                            </td>
+                            <td>
+                                <div class="small">{{ l.start_date }}</div>
+                                <div class="small text-muted">to {{ l.end_date }}</div>
+                            </td>
+                            <td>
+                                <span class="status-badge {% if l.status == 'Pending' %}bg-warning text-dark{% elif l.status == 'Approved' %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
+                                    {{ l.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="small text-muted">{{ l.admin_remarks or 'None' }}</div>
+                                {% if l.date_approved %}
+                                    <div class="text-accent-1 font-monospace" style="font-size: 0.65rem;">Approved: {{ l.date_approved }}</div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if l.status == 'Pending' %}
+                                <a href="/staff/leaves/cancel/{{ l.id }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Cancel this request?')"><i class="fa-solid fa-times"></i></a>
+                                {% else %}
+                                <button class="btn btn-sm btn-outline-secondary" disabled><i class="fa-solid fa-lock"></i></button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="5" class="text-center py-5 text-muted small">No records found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
